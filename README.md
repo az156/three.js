@@ -1,10 +1,37 @@
-# three.js
+# three.js (Fork)
 
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 [![DeepScan][deepscan]][deepscan-url]
 [![Discord][discord]][discord-url]
+
+这是 [three.js](https://github.com/mrdoob/three.js) 项目的一个fork。
+
+## 关于这个fork
+
+这个fork的目的是加强几何算法能力，并添加一些辅助工具
+
+主要修改包括:
+
+- 添加了几何面板中的面法线工具（FaceNormalsHelper）
+
+预期添加更多的几何算法：
+
+- 三角网格的面积、周长、重心等计算方法
+- 凸包、三角剖分
+- 简化、细分
+- 修复、对齐
+- 投影、裁剪
+- 碰撞检测、拾取
+- 切片
+- 显示顶点、面、边的索引
+
+## 如何贡献
+
+欢迎提交 issues 和 pull requests。请确保您的贡献符合本项目的目标
+
+## 原项目信息
 
 #### JavaScript 3D library
 

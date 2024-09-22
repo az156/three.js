@@ -8,6 +8,7 @@ import { SidebarGeometryBufferGeometry } from './Sidebar.Geometry.BufferGeometry
 import { SidebarGeometryModifiers } from './Sidebar.Geometry.Modifiers.js';
 
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
+import { FaceNormalsHelper } from 'three/addons/helpers/FaceNormalsHelper.js';
 
 function SidebarGeometry( editor ) {
 
@@ -192,30 +193,59 @@ function SidebarGeometry( editor ) {
 
 	container.add( geometryUserDataRow );
 
-	// Helpers
+	// show vertex normals
 
-	const helpersRow = new UIRow().setMarginLeft( '120px' );
-	container.add( helpersRow );
+	const showVertexNormals = new UIRow().setMarginLeft( '120px' );
+	container.add( showVertexNormals );
 
 	const vertexNormalsButton = new UIButton( strings.getKey( 'sidebar/geometry/show_vertex_normals' ) );
 	vertexNormalsButton.onClick( function () {
 
 		const object = editor.selected;
 
-		if ( editor.helpers[ object.id ] === undefined ) {
+		const helper = editor.helpers[ object.id ];
 
-			editor.addHelper( object, new VertexNormalsHelper( object ) );
-
-		} else {
+		if(helper !== undefined) {
 
 			editor.removeHelper( object );
 
+		}
+		if(helper === undefined || helper.type !== 'VertexNormalsHelper'){	
+
+			editor.addHelper( object, new VertexNormalsHelper( object ) );
 		}
 
 		signals.sceneGraphChanged.dispatch();
 
 	} );
-	helpersRow.add( vertexNormalsButton );
+	showVertexNormals.add( vertexNormalsButton );
+
+	// show face normals
+
+	const showFaceNormals = new UIRow().setMarginLeft( '120px' );
+	container.add( showFaceNormals );
+
+	const faceNormalsButton = new UIButton( strings.getKey( 'sidebar/geometry/show_face_normals' ) );
+	faceNormalsButton.onClick( function () {
+
+		const object = editor.selected;
+
+		const helper = editor.helpers[ object.id ];
+
+		if(helper !== undefined) {
+
+			editor.removeHelper( object );
+
+		}
+		if(helper === undefined || helper.type !== 'FaceNormalsHelper'){	
+
+			editor.addHelper( object, new FaceNormalsHelper( object ) );
+		}
+
+		signals.sceneGraphChanged.dispatch();
+
+	} );
+	showFaceNormals.add( faceNormalsButton );
 
 	// Export JSON
 
@@ -292,7 +322,7 @@ function SidebarGeometry( editor ) {
 
 			geometryBoundingBox.setInnerHTML( `${x}<br/>${y}<br/>${z}` );
 
-			helpersRow.setDisplay( geometry.hasAttribute( 'normal' ) ? '' : 'none' );
+			showVertexNormals.setDisplay( geometry.hasAttribute( 'normal' ) ? '' : 'none' );
 
 			geometryUserData.setValue( JSON.stringify( geometry.userData, null, '  ' ) );
 
@@ -301,10 +331,17 @@ function SidebarGeometry( editor ) {
 			const helper = editor.helpers[ object.id ];
 
 			if ( helper !== undefined ) {
-
+				
 				editor.removeHelper( object );
-				editor.addHelper( object, new VertexNormalsHelper( object ) );
 
+				if(helper.type === 'VertexNormalsHelper') {
+
+					editor.addHelper( object, new VertexNormalsHelper( object ) );
+
+				} else if(helper.type === 'FaceNormalsHelper') {
+
+					editor.addHelper( object, new FaceNormalsHelper( object ) );
+				}
 			}
 
 		} else {
